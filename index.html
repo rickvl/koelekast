@@ -193,6 +193,11 @@ body {
     background-color: #ff6b81;
     color: #fff;
   }
+  table tr:hover {
+  cursor: pointer;
+  background-color: #e0ffe0 !important;
+  }
+
   #modal, #barcodeModal {
     display: none;
     position: fixed;
@@ -403,6 +408,13 @@ if (!userBarcodes) {
   localStorage.setItem("userBarcodes", JSON.stringify(userBarcodes));
 }
 
+function selectUser(user) {
+  currentUser = user;
+  showNotification(`Gebruiker geselecteerd: ${user}`, "success");
+  updateOverzicht(); // Highlight de geselecteerde rij
+}
+
+
 let currentUser = "";
 let selectedCounts = {};
 
@@ -545,7 +557,7 @@ function updateOverzicht() {
     let userCell = medalLabel 
       ? `${user}<br/><span style="font-size: 12px; font-style: italic;">${medalLabel}</span>` 
       : user;
-    html += `<tr ${rowStyle}><td>${userCell}</td><td><svg id="user-barcode-${user.replace(/\s/g, '')}"></svg></td>`;
+    html += `<tr ${rowStyle} onclick="selectUser('${user}')"><td>${userCell}</td><td><svg id="user-barcode-${user.replace(/\s/g, '')}"></svg></td>`;
     productCategories.forEach(product => {
       let count = purchases[user] ? purchases[user].filter(p => p.category === product.key).length : 0;
       html += `<td>${count > 0 ? product.label + " x" + count : "-"}</td>`;
