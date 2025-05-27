@@ -358,10 +358,11 @@
     let productCategories = JSON.parse(localStorage.getItem("productCategories"));
     if (!productCategories) {
       productCategories = [
-        { key: "snacks", label: "Snacks", defaultPrice: 0.50},
-        { key: "kinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
-        { key: "drinken", label: "Drinken", defaultPrice: 0.80},
-        { key: "overige", label: "Overige dranken", defaultPrice: 1.10 }
+        { key: "Snacks", label: "Snacks", defaultPrice: 0.50},
+        { key: "KinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
+        { key: "Drinken", label: "Drinken", defaultPrice: 0.95},
+        { key: "Arizona", label: "Overige dranken", defaultPrice: 1.10 },
+        { key: "Chips", label: "Drinken", defaultPrice: 0.50}
       ];
       localStorage.setItem("productCategories", JSON.stringify(productCategories));
     }
