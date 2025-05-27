@@ -452,7 +452,7 @@ function loadProducts() {
     
     // Label element
     let label = document.createElement("div");
-    label.textContent = category.label;
+    label.innerHTML = `${category.label}<br><span style="font-size: 14px; color: #555;">€${category.defaultPrice.toFixed(2)}</span>`;
     div.appendChild(label);
     
     // SVG voor de productbarcode
@@ -468,7 +468,7 @@ function loadProducts() {
       let count = selectedCounts[category.key] || 0;
       count++;
       selectedCounts[category.key] = count;
-      label.textContent = category.label + (count > 1 ? " (" + count + ")" : "");
+      label.innerHTML = `${category.label}${count > 1 ? " (" + count + ")" : ""}<br><span style="font-size: 14px; color: #555;">€${category.defaultPrice.toFixed(2)}</span>`;
       div.classList.add("selected");
     });
 
