@@ -866,7 +866,7 @@ function hideAdminOverview() {
 function removeAllInfo() {
   let confirmText = prompt("Weet je zeker dat je ALLE informatie wilt verwijderen? Dit kan niet ongedaan gemaakt worden. Typ 'VERWIJDER' om te bevestigen.");
   if (confirmText === "VERWIJDER") {
-    localStorage.removeItem("purchases");
+    localStorage.clear();
     updateOverzicht();
     updateAdminContent();
     showNotification("Alle informatie is verwijderd.", "success");
