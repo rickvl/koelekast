@@ -292,7 +292,7 @@
         <h2>Acties</h2>
         <div>
         </div>
-        <button onclick="removePurchase()" class="delete-btn">Verwijder aankoop</button>
+        <button onclick="removePurchase()" class="delete-btn">Verwijder mijn laatste aankoop</button>
         <button onclick="showPurchases()" style="background-color:#007bff;">Bekijk recente aankopen</button>
         <button onclick="showAchievementList()" style="background-color:#60cf47;">Bekijk Alle Achievements</button>
         <button onclick="showAdminOverview()" style="background-color:#f44e90;">Admin Overzicht</button>
@@ -361,8 +361,8 @@
         { key: "Snacks", label: "Snacks", defaultPrice: 0.50},
         { key: "KinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
         { key: "Drinken", label: "Drinken", defaultPrice: 0.95},
-        { key: "Arizona", label: "Overige dranken", defaultPrice: 1.10 },
-        { key: "Chips", label: "Drinken", defaultPrice: 0.50}
+        { key: "Arizona", label: "Arizona", defaultPrice: 1.10 },
+        { key: "Chips", label: "Chips", defaultPrice: 0.50}
       ];
       localStorage.setItem("productCategories", JSON.stringify(productCategories));
     }
@@ -503,10 +503,10 @@ function updateOverzicht() {
       medalLabel = "Big Spender";
       backgroundColor = "#FFD700"; // goud
     } else if (index === 1) {
-      medalLabel = "Baller";
+      medalLabel = "Little Big Spender";
       backgroundColor = "#C0C0C0"; // zilver
     } else if (index === 2) {
-      medalLabel = "Mid";
+      medalLabel = "Getting There";
       backgroundColor = "#CD7F32"; // brons
     }
     // Als de gebruiker de huidige is, overschrijf dan met groen
