@@ -289,7 +289,7 @@
     <!-- Sidebar: Acties en Voorraad -->
     <div class="sidebar">
       <div class="actions">
-        <h2>Acties</h2>
+        <h2>Beheer</h2>
         <div>
         </div>
         <button onclick="removePurchase()" class="delete-btn">Verwijder mijn laatste aankoop</button>
@@ -298,7 +298,7 @@
         <button onclick="showAdminOverview()" style="background-color:#f44e90;">Admin Overzicht</button>
       </div>
       <div class="inventory">
-        <h2>Voorraad</h2>
+        <h2>Assortiment</h2>
         <div id="inventoryDisplay"></div>
       </div>
     </div>
@@ -329,25 +329,6 @@
     <div id="adminContent"></div>
     <button onclick="removeAllInfo()" style="background-color:#ff7979;">Verwijder alle info</button>
     <button onclick="hideAdminOverview()" style="background-color:#6c757d;">Terug</button>
-    <div class="admin-section">
-      <h2>Productbeheer</h2>
-      <button onclick="toggleProductManagement()">Productcategorie toevoegen</button>
-      <div id="adminProductManagement" style="display: none;">
-        <input type="text" id="productName" placeholder="Productnaam" />
-        <input type="number" id="productPrice" placeholder="Prijs" step="0.01" />
-        <button id="addProductButton" onclick="addOrUpdateProduct()">Voeg categorie toe</button>
-        <div id="productList"></div>
-      </div>
-    </div>
-    <div class="admin-section">
-      <h2>Voorraad Overzicht</h2>
-      <div id="inventoryOverview"></div>
-      <h3>Voeg nieuw voorraad item toe</h3>
-      <label for="inventoryCategory">Categorie:</label>
-      <select id="inventoryCategory"></select>
-      <input type="text" id="inventoryItem" placeholder="Item naam" />
-      <button onclick="addInventoryItem()">Voeg item toe</button>
-    </div>
   </div>
 
   <script>
@@ -358,26 +339,25 @@
     let productCategories = JSON.parse(localStorage.getItem("productCategories"));
     if (!productCategories) {
       productCategories = [
-        { key: "Snacks", label: "Snacks", defaultPrice: 0.50},
-        { key: "KinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
-        { key: "Drinken", label: "Drinken", defaultPrice: 0.95},
-        { key: "Arizona", label: "Arizona", defaultPrice: 1.10 },
-        { key: "Chips", label: "Chips", defaultPrice: 0.50}
+        { key: "snacks", label: "Snacks", defaultPrice: 0.50},
+        { key: "kinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
+        { key: "drinken", label: "Drinken", defaultPrice: 0.95},
+        { key: "arizona", label: "Arizona", defaultPrice: 1.10 },
+        { key: "chips", label: "Chips", defaultPrice: 0.50}
       ];
       localStorage.setItem("productCategories", JSON.stringify(productCategories));
     }
 
 // Voorraad
-    let inventory = JSON.parse(localStorage.getItem("inventory"));
-    if (!inventory) {
-      inventory = {
-        snacks: ["Lion", "Twix", "Mars", "Snickers", "Kitkat"],
-        drinken: ["Coca-Cola", "Coca-Cola Zero", "Coca-Cola Cherry", "Coca-Cola Vanille", "7UP"],
-        kinderBueno: ["Kinder Bueno"],
-        overige: ["Arizona", "Dr Pepper"]
-      };
-      localStorage.setItem("inventory", JSON.stringify(inventory));
-    }
+    inventory = {
+      snacks: ["Lion", "Twix", "Mars", "Snickers", "Kitkat"],
+      drinken: ["Coca-Cola", "Coca-Cola Zero", "Coca-Cola Vanille", "7UP", "Ice-Tea Zero"],
+      kinderBueno: ["Kinder Bueno"],
+      arizona: ["Arizona"],
+      chips: ["Bugles"]
+    };
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+    
 
 // Gebruikers
     let users = JSON.parse(localStorage.getItem("users")) || [];
@@ -827,26 +807,7 @@ function deleteProduct(index) {
     updateInventoryCategoryOptions();
   }
 }
-function updateBarcodeListModal() {
-  let container = document.getElementById("barcodeListModal");
-  container.innerHTML = "";
-  productCategories.forEach(product => {
-    let wrapper = document.createElement("div");
-    wrapper.style.marginBottom = "20px";
-    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.id = "barcode-modal-" + product.key;
-    wrapper.appendChild(svg);
-    let caption = document.createElement("div");
-    caption.textContent = product.label + " (Barcode: " + product.barcode + ")";
-    wrapper.appendChild(caption);
-    container.appendChild(wrapper);
-  });
-}
-function showBarcodeList() {
-  updateBarcodeListModal();
-  document.getElementById("barcodeModal").style.display = "block";
-  document.getElementById("barcodeModal").scrollTop = 0;
-}
+
 function showAdminOverview() {
   let code = prompt("Voer de admin code in:");
   if (code !== "admin123") {
@@ -870,6 +831,7 @@ function removeAllInfo() {
     updateOverzicht();
     updateAdminContent();
     showNotification("Alle informatie is verwijderd.", "success");
+    window.location.href = "/";
   } else {
     showNotification("Verwijderen geannuleerd.", "error");
   }
@@ -908,15 +870,38 @@ function updateAdminContent() {
   html += "</table>";
   document.getElementById("adminContent").innerHTML = html;
 }
+
 function removeUserCompletely(user) {
-  if (confirm(`Weet je zeker dat je ${user} volledig wilt verwijderen (alle data inclusief barcode)?`)) {
-    let purchases = JSON.parse(localStorage.getItem("purchases")) || {};
-    delete purchases[user];
-    localStorage.setItem("purchases", JSON.stringify(purchases));
-    updateOverzicht();
-    updateAdminContent();
-    showNotification(`Gebruiker ${user} volledig verwijderd.`, "success");
+  if (!confirm(`Weet je zeker dat je ${user} volledig wilt verwijderen?`)) {
+    showNotification("Verwijderen geannuleerd.", "error");
+    return;
   }
+
+  // Verwijder uit 'users'
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  users = users.filter(u => u !== user);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  // Verwijder aankopen van gebruiker
+  let purchases = JSON.parse(localStorage.getItem("purchases")) || {};
+  delete purchases[user];
+  localStorage.setItem("purchases", JSON.stringify(purchases));
+
+  // Verwijder achievements van gebruiker
+  let userAchievements = JSON.parse(localStorage.getItem("userAchievements")) || {};
+  delete userAchievements[user];
+  localStorage.setItem("userAchievements", JSON.stringify(userAchievements));
+
+  // Eventueel: geselecteerde gebruiker resetten
+  if (currentUser === user) {
+    currentUser = "";
+  }
+
+  showNotification(`Gebruiker ${user} is volledig verwijderd.`, "success");
+
+  // UI bijwerken
+  updateOverzicht();
+  updateAdminContent && updateAdminContent(); // indien aanwezig
 }
 
 function adminRemoveProduct(user) {
@@ -1208,15 +1193,6 @@ function checkCombinatieKingDuringPurchase() {
 
    let uniqueDays = new Set(purchases[user].map(p => new Date(p.timestamp).toDateString()));
    return uniqueDays.size >= 3;
- }
-
- function logPurchaseDate(user) {
-   let purchases = JSON.parse(localStorage.getItem("purchases")) || {};
-   if (!purchases[user]) {
-     purchases[user] = [];
-   }
-   purchases[user].push({ timestamp: new Date().toISOString() });
-   localStorage.setItem("purchases", JSON.stringify(purchases));
  }
  
  function checkKoelkastKoning(user, totalSpent) {
