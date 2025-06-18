@@ -341,9 +341,9 @@
       productCategories = [
         { key: "snacks", label: "Snacks", defaultPrice: 0.50},
         { key: "kinderBueno", label: "Kinder Bueno", defaultPrice: 0.75},
-        { key: "drinken", label: "Drinken", defaultPrice: 0.95},
+        { key: "drinken", label: "Frisdrank", defaultPrice: 0.95},
         { key: "arizona", label: "Arizona", defaultPrice: 1.10 },
-        { key: "chips", label: "Chips", defaultPrice: 0.50}
+        { key: "chips", label: "Chips", defaultPrice: 0.40}
       ];
       localStorage.setItem("productCategories", JSON.stringify(productCategories));
     }
@@ -1209,7 +1209,6 @@ function checkCombinatieKingDuringPurchase() {
     return [...allProducts].every(product => purchasedItems.has(product)); // Check of alle producten minstens 1x gekocht zijn
   }
 
-
   function checkSpijtoptant(_, __, ___, removedPurchase) {
    return removedPurchase;
  }
@@ -1217,7 +1216,6 @@ function checkCombinatieKingDuringPurchase() {
  function checkOmgekeerdeWereld(emptyPurchase) {
     return emptyPurchase; // True als er niets aangeslagen is en de aankoop toch wordt bevestigd
   }
-
 
   function checkBetaaldMetInteresse(user) {
    let lastPurchaseDay = localStorage.getItem("firstPurchaseOfDay");
