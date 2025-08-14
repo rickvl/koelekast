@@ -11,3 +11,6 @@ V2.1 - Juni 2025
 - Tekstaanpassingen
 - Assortimentbeheer gefixed
 - Beheerpagina bijgewerkt
+
+V2.1.1 Augustus 2025
+- Prijswijziging
